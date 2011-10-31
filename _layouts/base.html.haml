@@ -86,4 +86,7 @@
     = fork_me_ribbon(site, page)
     - if site.google_analytics
       = google_analytics
+    - if page.bottom_javascripts
+      - page.bottom_javascripts.each do |javascript|
+        %script{ :type=>'text/javascript', :src=>javascript }
     = add_debug(site, page)
