@@ -39,6 +39,7 @@ Awestruct::Extensions::Pipeline.new do
     extension Awestruct::Extensions::Arquillian::JiraVersionPrefix.new
 
     extension Awestruct::Extensions::Lanyrd::Search.new('arquillian')
+    extension Awestruct::Extensions::Lanyrd::Export.new('/invasion/events/arquillian.ics')
 
     extension Awestruct::Extensions::Arquillian::TagInfo.new
     extension Arquillian::Model::Bind.new
@@ -55,7 +56,7 @@ Awestruct::Extensions::Pipeline.new do
     extension Awestruct::Extensions::Indexifier.new
 
     # Needs to be after Indexifier to get the linking correct
-    extension Awestruct::Extensions::Guide::Index.new('/guides')
+    extension Awestruct::Extensions::Guide::Index.new('/guides', '2011-10-12')
 
     #helper Awestruct::Extensions::Partial
     helper Awestruct::Extensions::GoogleAnalytics

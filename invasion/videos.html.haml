@@ -1,0 +1,28 @@
+---
+layout: invasion
+title: Videos
+javascripts: [ /javascripts/jquery-tmpl.js, /javascripts/jquery-jgfeed.js ]
+---
+%script#video_tmpl{:type=>'text/x-jquery-tmpl'}
+  .video
+    %h3 ${title}
+    .thumbnail
+      %a{:href => '${url}', :target=>'_blank'}
+        %img{:src=>'${thumbnail_medium}'}
+    .summary
+      {{html description}}
+
+%h2 Arquillian Videos on Vimeo
+#videos
+
+:javascript
+  jQuery.ajax({
+    url: 'http://vimeo.com/api/v2/channel/arquillian/videos.json',
+    dataType: 'jsonp',
+    jsonp: 'callback',
+    jsonpCallback: 'display_videos'
+  });
+
+  function display_videos(data) {
+    $('#video_tmpl').tmpl(data).appendTo('#videos');
+  }

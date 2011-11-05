@@ -429,6 +429,26 @@ ul.contributors {
   }
 }
 
+// Video page
+
+.video {
+  margin-bottom: 1.5em;
+  @include clearfix;
+  .thumbnail {
+    @include column-base;
+    width: 200px;
+    img {
+      width: 200px;
+      height: 150px;
+      @include box-shadow();
+    }
+  }
+  .summary {
+    @include column-base(true);
+    width: span(19) - 200 - $blueprint-grid-margin;
+  }
+}
+
 // Tag cloud styling
 
 .tag-cloud {

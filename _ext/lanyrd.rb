@@ -1,3 +1,5 @@
+require 'vpim/icalendar'
+
 ##
 # Lanyrd is an Awestruct extension module for interacting with lanyrd.com
 # to retrieve conference session listings, speakers and related info.
@@ -32,6 +34,7 @@ module Awestruct::Extensions::Lanyrd
   # * event (conference name, type: String)
   # * event_url (conference URL, type: URL (absolute))
   # * speaker_names (full name of all speakers, type: Array[String])
+  # * speakers (username and name of all speakers, type: Hash[username, name])
   #
   # Author:: Aslak Knutsen, Dan Allen
   # TODO:: retrieve the detail url and image url for the speaker, don't download detail pages of old sessions
@@ -121,12 +124,15 @@ module Awestruct::Extensions::Lanyrd
             session.event = meta.inner_text.strip if type.eql? 'Event'
             session.event_url = "#{@base}#{meta.at('a').attributes['href']}" if type.eql? 'Event'
             session.speaker_names = []
+            session.speakers = []
             
             if type.eql? 'Speakers'
               session.speaker_names = meta.inner_text.strip.split(', ')
-              #meta.search('a').each do |speaker_node|
-              #  session.speaker_names << speaker_node.inner_text.strip
-              #end
+              meta.search('a').each do |speaker_node|
+                name = speaker_node.inner_text.strip
+                username = speaker_node.attributes['href'].match(/\/profile\/([^\/]*)/)[1]
+                session.speakers << {'name' => name, 'username' => username }
+              end
             end
             
           end
@@ -135,6 +141,71 @@ module Awestruct::Extensions::Lanyrd
         end
       end
     end
-    
+  end
+
+  ##
+  # Awestruct::Extensions::Lanyrd::Export exports sessions retrived by the Search extension
+  # as a ical stream.
+  #
+  # This class is loaded as an extension in the Awestruct pipeline. The
+  # constructor accepts a output_path to where the ical stream should be exported.
+  #
+  #   extension Awestruct::Extensions::Lanyrd::Export.new('/invation/events/ical.ics')
+  #
+  # This extension performs the following work:
+  #
+  # * read all site.sessions
+  # * write out a ical using the vpim library
+  #
+  # Author:: Aslak Knutsen
+  class Export
+
+    def initialize(output_path)
+      @output_path = output_path
+    end
+
+    def execute(site)
+      if site.sessions
+
+        cal = Vpim::Icalendar.create2
+        site.sessions.each do |session|
+
+          cal.add_event do |e|
+            e.dtstart       Time.parse session.start_datetime.to_s
+            e.dtend         Time.parse session.end_datetime.to_s
+            e.summary       session.title
+            e.description session.description
+            e.categories    [ 'SESSION' ]
+            e.url           session.detail_url
+            e.set_text('LOCATION', session.event)
+            e.sequence      0
+            e.access_class  "PUBLIC"
+
+            now = Time.now
+            e.created       now
+            e.lastmod       now
+
+            e.organizer do |o|
+              o.cn = session.event
+              o.uri = session.event_url
+            end
+
+            session.speaker_names do |speaker|
+              attendee = Vpim::Icalendar::Address.create(speaker)
+              attendee.rsvp = true
+              e.add_attendee attendee
+            end
+          end
+        end
+
+        input_page = File.join( File.dirname(__FILE__), 'lanyrd.export.haml' )
+        page = site.engine.load_page( input_page )
+        page.date = page.timestamp unless page.timestamp.nil?
+        page.output_path = @output_path
+        page.session_ical = cal.encode
+        site.pages << page
+
+      end
+    end
   end
 end

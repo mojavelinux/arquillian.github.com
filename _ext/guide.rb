@@ -1,10 +1,14 @@
 module Awestruct
   module Extensions
     module Guide
+      Change = Struct.new(:sha, :author, :date, :message)
 
       class Index
-        def initialize(path_prefix)
+        include Guide
+        
+        def initialize(path_prefix, changes_since_date = nil)
           @path_prefix = path_prefix
+          @changes_since_date = changes_since_date
         end
 
         def transform(transformers)
@@ -23,6 +27,14 @@ module Awestruct
               guide.summary = page.guide_summary
               guide.group = page.guide_group
               guide.order = if page.guide_order then page.guide_order else 100 end
+              
+              # Add the Authors to Page and Guide based on Git Commit history
+              git_page_contributors = page_contributors(page, @changes_since_date)
+              if not page.authors
+                page.authors = git_page_contributors
+              end
+              guide.authors = page.authors
+              page.changes = page_changes(page, @changes_since_date)
               
               page_content = Hpricot(page.content)
               chapters = []
@@ -111,6 +123,34 @@ module Awestruct
           "#{ts * depth}"
         end
         
+      end
+
+      ##
+      # Returns a Array of unique author.name's based on the Git commit history located 
+      # at page.site.dir for the given page. 
+      # The Array is ordered by number of commits done by the authors.
+      #
+      def page_contributors(page, since)
+        authors = Hash.new
+        
+        g = Git.open(page.site.dir)
+        Git::Log.new(g, 50).path(page.relative_source_path[1..-1]).since(since).each do |c|
+          if authors[c.author.name]
+            authors[c.author.name] = authors[c.author.name] + 1
+          elsif
+            authors[c.author.name] = 1
+          end
+        end
+        return authors.sort{|a, b| b[1] <=> a[1]}.map{|x| x[0]}
+      end
+
+      def page_changes(page, since)
+        changes = []
+        g = Git.open(page.site.dir)
+        Git::Log.new(g, 50).path(page.relative_source_path[1..-1]).since(since).each do |c|
+          changes << Change.new(c.sha, c.author.name, c.author.date, c.message.to_a[0].chomp)  
+        end
+        changes
       end
     end
   end
