@@ -752,7 +752,7 @@ p.rally {
   font-size: 1.1em;
   font-family: $footer_font_family;
   background-color: $footer_base_color;
-  @include single-box-shadow($palette_50gray, 1px, 4px, 10px, -1px, inset);
+  @include single-box-shadow($palette_black_80trans, -1px, 5px, 10px, -3px, inset);
   color: $footer_text_color;
   height: 290px;
   .container {
@@ -768,10 +768,6 @@ p.rally {
     }
     a {
       color: $footer_link_color;
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
-      }
     }
     h4 {
       margin-bottom: .5em;
@@ -784,16 +780,23 @@ p.rally {
         list-style: none;
         margin: 0;
         padding: 0;
+        a {
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
     }
     .sponser {
       @include prepend(1);
       @include column(7.5, true);
       img.branding {
-        width: 250px;
-        height: 50px;
+        width: span(7.5) - $blueprint-grid-margin;
+//        height: 50px;
         background-color: $branding_background_color;
         padding: 5px;
+        margin: -5px 0;
         @include border-radius;
       }
     }
