@@ -1358,12 +1358,12 @@ body.guide {
         padding: 2em;
         //styling for guide button when it has been pressed
         .guides_menu {
-          // QUESTION why is this disabled?
-          //font-family: "MarvelSans", sans-serif;
+          font-family: "MarvelSans", sans-serif;
           font-size: 2em;
           float: right;
           margin: -20px $blueprint-grid-margin 5px 0;
           color: $guide_button_text_active_color;
+          text-decoration: none;
         }
         dl {
           width: 320px;
