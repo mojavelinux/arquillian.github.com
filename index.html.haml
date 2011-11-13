@@ -13,58 +13,56 @@ body_class: home
       .cta
         %a.primary{:href=>'/guides/getting_started'} Get Started!
   #slides
-    .slide
-      .container.layout1
-        .backdrop
-          .headline
-            %h2 Don't write another test until you study this one <img src="/images/right_arrow.png" alt=">"/>
-            %ol
-              %li Delegates execution of the test to Arquillian
-              %li Creates a test archive that provides classpath isolation
-              %li Injects the CDI bean from the application code
-              %li Specifies a test method for asserting behavior
-          .visual
-            :textile
-              div(filetab). GreeterTest.java
+    .slide.code_layout
+      .container
+        .headline
+          %h2 Don't write another test until you check out this one <img src="/images/right_arrow.png" alt=">"/>
+          %ol
+            %li Delegates execution of the test to Arquillian
+            %li Generates the test archive, providing isolation for classes and resources
+            %li Injects the CDI bean included in the test archive
+            %li Defines a test method that asserts the behavior of the injected bean
+        .visual
+          :textile
+            div(filetab). GreeterTest.java
 
-              bc(prettify).. @RunWith(Arquillian.class) #1
-              public class GreeterTest {
-                  @Deployment #2
-                  public static JavaArchive createDeployment() {
-                      return ShrinkWrap.create(JavaArchive.class)
-                          .addClass(Greeter.class)
-                          .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-                  }
+            bc(prettify).. @RunWith(Arquillian.class) #1
+            public class GreeterTest {
+                @Deployment #2
+                public static JavaArchive createDeployment() {
+                    return ShrinkWrap.create(JavaArchive.class)
+                        .addClass(Greeter.class)
+                        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                }
 
-                  @Inject #3
-                  Greeter greeter;
+                @Inject #3
+                private Greeter greeter;
 
-                  @Test #4
-                  public void should_create_greeting() {
-                      assertEquals("Hello, Earthling!", greeter.greet("Earthling"));
-                  }
-              }
+                @Test #4
+                public void should_create_greeting() {
+                    assertEquals("Hello, Earthling!", greeter.greet("Earthling"));
+                }
+            }
 
-              notextile. 
-    .slide
-      .layout3
-        .container
-          .visual{:style=>'background: url(\'/images/dukeschoiceaward2011_enhanced.jpg\') top center no-repeat'}
-          .headline
-            %h2 Arquillian wins a Duke's Choice Award at JavaOne 2011
-            %p This award goes out to the entire Arquillian community: coders, bloggers and evangelists. Excellent work! 
-            %p.link
-              %a{:href=>'/blog/2011/10/02/arquillian-wins-a-duke-choice-award/'} Read more &gt;
-    .slide
-      .container.layout2
+            notextile. 
+    .slide.poster_layout{:style=>'background-image: url(images/dukeschoiceaward2011_enhanced.jpg);'}
+      .container
+        .headline
+          %h2 Arquillian wins a Duke's Choice Award at JavaOne
+          %p This award goes out to the entire Arquillian community: coders, bloggers and evangelists. Excellent work! 
+          %p.more
+            %a{:href=>'/blog/2011/10/02/arquillian-wins-a-duke-choice-award/'} Read more
+            &raquo;
+    .slide.screenshot_layout
+      .container
         .visual
           %a{:href=>'guides/getting_started'}
             %img{:src=>'/images/screenshot-guides-index.png'}
         .headline
           %h2 Earn your first Arquillian green bar!
           :textile
-            Follow the "Getting Started":/guides/getting_started/ guide to learn how to add the Arquillian infrastructure to your test suite, write your first test and get it to pass. Get started now! *(greenbar)Green bar*.
-          %img.trim{:src=>'/images/guides/arquillian_tutorial_junit_green_bar.png', :style=>'margin-left: -25em;'}
+            Follow the "Getting Started":/guides/getting_started/ guide to learn how to add the Arquillian infrastructure to your test suite, write your first test and get it to pass. *(greenbar)Green bar*.
+          %img.trim{:src=>'/images/guides/arquillian_tutorial_junit_green_bar.png'}
   :javascript
     $(function() {
       var winWidth = $(window).width();

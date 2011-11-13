@@ -91,12 +91,15 @@
 
 /* code snippet bounding box */
 pre.prettify, pre.command {
+  background-color: $palette_white;
   padding: 8px 1px 8px 10px;
-  border: 1px solid #AAA;
   font-size: 1em;
   line-height: 1.5;
-  @include border-radius(5px);
-  @include single-box-shadow(#CCC, 1px, 1px, 5px);
+  //border: 1px solid #aaa;
+  //@include border-radius(5px);
+  //@include single-box-shadow(#CCC, 1px, 1px, 5px);
+  @include border-radius;
+  @include box-shadow;
   overflow-x: auto;
 }
 

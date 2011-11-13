@@ -2,9 +2,9 @@
 
 //Mono
 $palette_white: rgba(255,255,255,1);
-$palette_white_20trans: (255,255,255,.8);
-$palette_white_50trans: (255,255,255,.5);
-$palette_white_80trans: (255,255,255,.2);
+$palette_white_20trans: rgba(255,255,255,.8);
+$palette_white_50trans: rgba(255,255,255,.5);
+$palette_white_80trans: rgba(255,255,255,.2);
 $palette_10gray: rgba(230,230,230,1);
 $palette_20gray: rgba(204,204,204,1);
 $palette_25gray: rgba(197,197,197,1); //guide icon
@@ -177,10 +177,10 @@ $default-text-shadow-blur: 1px;
 
 $default-border-radius: 4px;
 
-$default-box-shadow-color: $palette_50gray_50trans;
-$default-box-shadow-h-offset: 1px;
-$default-box-shadow-v-offset: 2px;
-$default-box-shadow-blur: 4px;
+$default-box-shadow-color: $palette_50gray_20trans;
+$default-box-shadow-h-offset: 0px;
+$default-box-shadow-v-offset: 1px;
+$default-box-shadow-blur: 5px;
 
 $sprite-default-size: 60px;
 $sprite-image-default-width: $sprite-default-size;

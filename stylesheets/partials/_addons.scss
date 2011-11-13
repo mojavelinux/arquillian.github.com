@@ -1,3 +1,8 @@
+@mixin bottom() {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 @mixin font-face-variant($name, $variant, $font-files, $eot: false) {
   $iefont: unquote("#{$eot}?iefix");
   @font-face {
